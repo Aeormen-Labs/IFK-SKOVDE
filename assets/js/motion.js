@@ -10,6 +10,9 @@
       entries.forEach((e) => { if (e.isIntersecting) { e.target.classList.add("is-in"); io.unobserve(e.target); } });
     }, { rootMargin: "0px 0px -8% 0px", threshold: 0.08 });
     document.querySelectorAll(".reveal").forEach((el) => io.observe(el));
+    // Säkerhetsnät: om något inte hunnit synas (utskrift, långsam enhet, ovanlig scroll) visa allt efter 3 s
+    setTimeout(() => document.querySelectorAll(".reveal:not(.is-in)").forEach((el) => el.classList.add("is-in")), 3000);
+    window.addEventListener("beforeprint", () => document.querySelectorAll(".reveal").forEach((el) => el.classList.add("is-in")));
 
     // Räkna upp siffror i .stat b och [data-count]
     const nums = document.querySelectorAll(".stat b, [data-count]");
