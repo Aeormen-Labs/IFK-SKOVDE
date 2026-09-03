@@ -141,11 +141,11 @@ window.IFK = {
     { name: "JumpYard Skövde",             url: "https://jumpyard.se/skovde/",                 img: "jumpyard.png" },
     { name: "Glaskedjan Skövde",           url: "https://skovde.glaskedjan.se",                img: "glaskedjan-skovde.png" },
     { name: "Daloc",                       url: "https://www.daloc.se",                        img: "daloc.png" },
-    { name: "Spar",                        url: "",                                            img: "spar.png" },   // TODO: hemsida saknas, fyll i
+    { name: "Spar",                        url: "https://shspar.com/",                         img: "spar.png" },
     { name: "Renta Skövde",                url: "https://renta.se/maskinuthyrning-skovde/",    img: "renta.png" },
     { name: "Henrik Berggren Produktion",  url: "https://hbp.se",                              img: "henrik-berggren-produktion.png" },
     { name: "Volvo",                       url: "https://www.volvocars.com/se/",               img: "volvo.png" },
-    { name: "Intersport – till webshopen", url: "https://www.intersport.se",                   img: "intersport.png" }  // TODO: byt till klubbens teamshop-länk
+    { name: "Intersport – till webshopen", url: "https://team.intersport.se/ifk-skovde-fk",   img: "intersport.png" }
   ],
 
   /* Produkter. sizes: [] om storlek inte behövs. badge: valfri etikett. */
