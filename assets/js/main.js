@@ -42,12 +42,13 @@
 
   /* ---------- Header & footer ---------- */
   const NAV = [
-    ["index.html", "Hem", "home"],
     ["matcher.html", "Matcher", "matcher"],
+    ["spelare.html", "Truppen", "spelare"],
     ["lag.html", "Våra lag", "lag"],
     ["klubben.html", "Klubben", "klubben"],
     ["historia.html", "Historia", "historia"],
     ["vision.html", "Vision 2030", "vision"],
+    ["fantasy.html", "Fantasy", "fantasy", "nav__fantasy"],
     ["kontakt.html", "Kontakt", "kontakt"],
     ["shop.html", "Shop", "shop", "nav__shop"]
   ];
@@ -143,9 +144,12 @@
     if (!nm) { el.innerHTML = `<div class="match-card"><p class="empty">Inga kommande matcher inlagda. <a href="${root}matcher.html">Se resultat</a></p></div>`; return; }
     const homeName = nm.home ? D.club.shortName : nm.opponent;
     const awayName = nm.home ? nm.opponent : D.club.shortName;
+    const msTo = nm.d - new Date();
+    const state = msTo <= 0 && msTo > -2 * 3600e3 ? "live" : msTo <= 0 ? "ft" : msTo < 6 * 3600e3 ? "matchday" : "upcoming";
+    const label = { live: "Pågår nu", ft: "Slutsignal · resultat kommer", matchday: "Matchdag", upcoming: "Nästa match" }[state];
     el.innerHTML = `
-      <div class="match-card">
-        <div class="match-card__label"><span>Nästa match</span><span>${esc(nm.competition)}</span></div>
+      <div class="match-card match-card--${state}">
+        <div class="match-card__label"><span>${state === "live" ? '<i class="live-dot"></i>' : ""}${label}</span><span>${esc(nm.competition)}</span></div>
         <div class="match-card__teams">
           <div class="match-card__team">${esc(homeName)}<small>${nm.home ? "Hemma" : "Borta"}</small></div>
           <div class="match-card__vs">VS</div>
@@ -157,9 +161,13 @@
         </div>
         <div class="match-card__actions">
           <a class="btn btn--primary btn--sm" href="${root}matcher.html">Hela spelschemat</a>
-          ${nm.home ? `<a class="btn btn--ghost btn--sm" href="${root}kontakt.html#hitta">Hitta till ${esc(D.club.ground)}</a>` : ""}
+          ${nm.home ? `<a class="btn btn--ghost btn--sm" href="${root}kontakt.html#hitta">Hitta hit</a>` : ""}
+          <a class="btn btn--ghost btn--sm" href="${icsFor(nm)}" download="ifk-skovde-${nm.date}.ics">Kalender</a>
+          <button class="btn btn--ghost btn--sm" type="button" data-share="${nm.date}">Dela</button>
         </div>
       </div>`;
+    bindShare(el);
+    if (state !== "upcoming" && state !== "matchday") { $("#countdown").innerHTML = `<div style="grid-column:1/-1"><b>${state === "live" ? "Heja IFK!" : "Tack för stödet"}</b><span>${state === "live" ? "matchen pågår" : "resultatet läggs in efter matchen"}</span></div>`; return; }
     const tick = () => {
       const diff = Math.max(0, nm.d - new Date());
       const s = Math.floor(diff / 1000);
@@ -171,6 +179,24 @@
     tick();
   }
 
+  const pad2 = (n) => String(n).padStart(2, "0");
+  const icsStamp = (d) => `${d.getFullYear()}${pad2(d.getMonth() + 1)}${pad2(d.getDate())}T${pad2(d.getHours())}${pad2(d.getMinutes())}00`;
+  function icsFor(f) {
+    const e = new Date(f.d.getTime() + 2 * 3600e3);
+    const ics = ["BEGIN:VCALENDAR", "VERSION:2.0", "PRODID:-//IFK Skövde FK//Matcher//SV", "BEGIN:VEVENT", `UID:${f.date}-${f.opponent.replace(/\W/g, "")}@ifkskovdefk`, `DTSTART:${icsStamp(f.d)}`, `DTEND:${icsStamp(e)}`, `SUMMARY:${f.home ? D.club.shortName + " – " + f.opponent : f.opponent + " – " + D.club.shortName}`, `LOCATION:${f.home ? D.club.ground + ", " + D.club.city : "Bortaplan"}`, "END:VEVENT", "END:VCALENDAR"];
+    return "data:text/calendar;charset=utf-8," + encodeURIComponent(ics.join("\r\n"));
+  }
+  function bindShare(scope) {
+    $$("[data-share]", scope).forEach((b) => b.addEventListener("click", async () => {
+      const f = fixtures.find((x) => x.date === b.dataset.share); if (!f) return;
+      const title = f.home ? `${D.club.shortName} – ${f.opponent}` : `${f.opponent} – ${D.club.shortName}`;
+      const text = f.score ? `${title} ${f.home ? f.score[0] + "–" + f.score[1] : f.score[1] + "–" + f.score[0]}` : `${title}, ${fmtLong(f.d)} kl ${f.time}${f.home ? " på " + D.club.ground : ""}. Kom och heja!`;
+      const url = location.origin + root + "matcher.html";
+      if (navigator.share) { try { await navigator.share({ title, text, url }); } catch {} }
+      else { try { await navigator.clipboard.writeText(`${text} ${url}`); toast("Kopierat till urklipp"); } catch { toast(text); } }
+    }));
+  }
+  window.IFKUtil.icsFor = icsFor;
   function fixtureRow(f, opts = {}) {
     const r = resultOf(f);
     const played = !!f.score;
@@ -190,8 +216,8 @@
     }
     return `<div class="fixture ${isNext ? "fixture--next" : ""}" data-status="${played ? "played" : "upcoming"}" data-venue="${home ? "home" : "away"}">
       <div class="fixture__date">${fmtDay(f.d)}<small>${SV_DAYS[f.d.getDay()]} ${f.d.getFullYear()}</small></div>
-      <div><div class="fixture__teams">${teams}${isNext ? '<span class="tag">Nästa</span>' : ""}${home ? "" : ""}</div>
-        <div class="fixture__meta">${esc(f.competition)} · ${home ? esc(D.club.ground) : "Bortaplan"}</div></div>
+      <div><div class="fixture__teams">${teams}${isNext ? '<span class="tag">Nästa</span>' : ""}</div>
+        <div class="fixture__meta">${esc(f.competition)} · ${home ? esc(D.club.ground) : "Bortaplan"}${opts.actions === false ? "" : ` · <span class="fixture__acts">${played ? "" : `<a href="${icsFor(f)}" download="ifk-skovde-${f.date}.ics">Kalender</a> · `}<button type="button" class="linklike" data-share="${f.date}">Dela</button></span>`}</div></div>
       ${score}
     </div>`;
   }
@@ -199,6 +225,7 @@
   function renderFixtureList(el, list) {
     if (!el) return;
     el.innerHTML = list.length ? list.map((f) => fixtureRow(f)).join("") : `<p class="empty">Inga matcher matchar filtret.</p>`;
+    bindShare(el);
   }
 
   function renderTable(el) {
@@ -213,6 +240,7 @@
         }).join("")}</tbody>
       </table></div>
       <p style="font-size:.85rem;color:var(--muted);margin-top:10px">Uppdaterad ${esc(t.updated)}. ${esc(t.note)} <a href="${esc(D.club.externalTable)}" target="_blank" rel="noopener">Hela tabellen hos Svensk fotboll</a>.</p>`;
+    document.dispatchEvent(new CustomEvent("ifk:table", { detail: el }));
   }
   window.IFKRender = { renderNextMatch, renderFixtureList, renderTable, fixtureRow };
 
@@ -232,6 +260,7 @@
         <div class="popup__body">
           <h2 id="popup-title" style="font-size:1.7rem">${esc(P.headline)}</h2>
           <p>${esc(P.text)}</p>
+          ${P.timerMinutes ? `<p class="popup__timer">Erbjudandet gäller i <b id="popup-timer">${P.timerMinutes}:00</b></p>` : ""}
           <div class="popup__code"><span>${esc(P.code)}</span><button class="btn btn--sm btn--dark" id="popup-copy" type="button">Kopiera</button></div>
           <a class="btn btn--primary btn--block" id="popup-go" href="${root}shop.html">Handla med ${P.percent} % rabatt</a>
           <button class="popup__later" id="popup-later" type="button">Nej tack, kanske senare</button>
@@ -245,6 +274,7 @@
     function open() {
       document.body.appendChild(wrap);
       requestAnimationFrame(() => { wrap.classList.add("is-open"); $("#popup-go").focus(); });
+      if (P.timerMinutes) { let s = P.timerMinutes * 60; const t = $("#popup-timer"); const tick = () => { s--; if (!document.body.contains(t)) return; t.textContent = `${Math.floor(s / 60)}:${String(s % 60).padStart(2, "0")}`; if (s > 0) setTimeout(tick, 1000); else close(); }; setTimeout(tick, 1000); }
       $("#popup-close").addEventListener("click", close);
       $("#popup-later").addEventListener("click", close);
       wrap.addEventListener("click", (e) => { if (e.target === wrap) close(); });

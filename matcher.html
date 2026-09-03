@@ -23,8 +23,12 @@
   <nav class="subnav" aria-label="Sektioner"><div class="container"><a href="#nasta">Nästa match</a><a href="#schema">Spelschema</a><a href="#tabell">Tabell</a><a href="#arena">Hitta hit</a></div></nav>
 
   <section class="section" id="nasta"><div class="container">
-    <div class="grid grid--2" style="align-items:start">
+    <div class="grid grid--3" style="align-items:start">
       <div id="next-match"></div>
+      <div id="tip-widget"></div>
+      <div id="motm-widget"></div>
+    </div>
+    <div class="grid grid--2" style="align-items:start;margin-top:18px">
       <div class="card">
         <h3>Matchdag på Södermalms IP</h3>
         <dl class="dl">
@@ -35,6 +39,7 @@
         </dl>
         <p style="font-size:.8rem;color:var(--muted);margin:10px 0 0">Priser och tider är exempel. Uppdatera i matcher.html.</p>
       </div>
+      <div class="card"><h3>Fantasy</h3><p style="color:var(--muted)">Laget låses vid avspark. Har du satt din elva?</p><a class="btn btn--primary btn--sm" href="fantasy.html">Till Fantasy</a></div>
     </div>
   </div></section>
 
@@ -69,6 +74,10 @@
 <script src="assets/js/data.js"></script>
 <script src="assets/js/main.js"></script>
 <script src="assets/js/shop.js"></script>
+<script src="assets/js/backend.js"></script>
+<script src="assets/js/scoring.js"></script>
+<script src="assets/js/engage.js"></script>
+<script src="assets/js/motion.js"></script>
 <script>
 document.addEventListener("ifk:ready", () => {
   const { renderNextMatch, renderFixtureList, renderTable } = window.IFKRender;
@@ -84,7 +93,7 @@ document.addEventListener("ifk:ready", () => {
     document.querySelectorAll("#fixture-filters [data-f]").forEach(x => x.setAttribute("aria-pressed", String(x === b)));
     apply(b.dataset.f);
   });
-  // iCal med kommande hemmamatcher
+  // iCal med alla kommande hemmamatcher
   const pad = n => String(n).padStart(2, "0");
   const ics = ["BEGIN:VCALENDAR","VERSION:2.0","PRODID:-//IFK Skövde FK//Matcher//SV"];
   fixtures.filter(f => !f.score && f.home).forEach(f => {

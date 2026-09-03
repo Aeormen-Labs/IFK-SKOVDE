@@ -36,6 +36,11 @@
   </div></section>
 
   <section class="section section--alt"><div class="container">
+    <div class="section-head"><div><span class="eyebrow">Just nu</span><h2>Var står vi i dag?</h2></div></div>
+    <div class="tracker" id="tracker"></div>
+  </div></section>
+
+  <section class="section"><div class="container">
     <div class="section-head"><div><span class="eyebrow">Byggstenarna</span><h2>Fem saker vi bygger på</h2></div></div>
     <div class="pillars">
       <div class="pillar"><h3>1. Spelarutveckling</h3><p>En gemensam spelidé från P8 till A-lag, utbildade tränare på varje nivå och ett utvecklingslag som är bron in i seniorfotbollen. Målet: minst hälften av truppen fostrad i Skövde.</p></div>
@@ -66,5 +71,23 @@
 <script src="assets/js/data.js"></script>
 <script src="assets/js/main.js"></script>
 <script src="assets/js/shop.js"></script>
+<script src="assets/js/backend.js"></script>
+<script src="assets/js/scoring.js"></script>
+<script src="assets/js/engage.js"></script>
+<script src="assets/js/motion.js"></script>
+<script>
+document.addEventListener("ifk:ready", () => {
+  const t = IFK.table; const rows = t.rows; const i = rows.findIndex(r => /skövde/i.test(r.team)); const me = rows[i];
+  const leader = rows[0]; const gap = leader.pts - me.pts; const played = me.p; const total = 26;
+  const ladder = [["Division 2", "Norra Götaland", "now"], ["Ettan", "Södra", ""], ["Superettan", "Målet 2030", "goal"], ["Allsvenskan", "", ""]];
+  document.getElementById("tracker").innerHTML = `
+    <div class="section-head" style="margin-bottom:6px"><div><h3 style="margin:0">Plats ${i + 1} i ${IFK.club.league}</h3><span class="team__meta">${me.pts} poäng efter ${played} matcher · ${gap ? gap + " poäng bakom " + leader.team : "serieledare"}</span></div><span class="tag">${t.updated}</span></div>
+    <div class="tracker__ladder">${ladder.map(([a, b, k]) => `<div class="rung ${k ? "rung--" + k : ""}"><b>${a}</b><span>${b}</span></div>`).join("")}</div>
+    <div class="tracker__meter"><i style="width:0" id="meter"></i></div>
+    <div class="tracker__foot"><span>Säsongen 2026: ${played} av ${total} omgångar spelade</span><span>Målet: uppflyttning till Ettan</span></div>
+    <div class="grid grid--3" style="margin-top:16px"><div class="stat"><b data-count="${me.w}">${me.w}</b><span>vinster</span></div><div class="stat"><b data-count="${me.gf}">${me.gf}</b><span>gjorda mål</span></div><div class="stat"><b data-count="${me.pts}">${me.pts}</b><span>poäng</span></div></div>`;
+  setTimeout(() => document.getElementById("meter").style.width = Math.round(played / total * 100) + "%", 400);
+});
+</script>
 </body>
 </html>

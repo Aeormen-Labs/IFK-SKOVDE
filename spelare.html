@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="sv">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="theme-color" content="#0A3A8C">
+<link rel="icon" href="assets/img/logo.svg" type="image/svg+xml">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@600;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="assets/css/style.css">
+<title>Truppen – IFK Skövde FK</title>
+<meta name="description" content="Herr A-truppen i IFK Skövde FK 2026: spelare, positioner och säsongsstatistik.">
+</head>
+<body data-page="spelare">
+<a class="skip-link" href="#main">Hoppa till innehåll</a>
+<header class="site-header" id="site-header"></header>
+<main id="main">
+  <section class="page-hero"><div class="container">
+    <div class="crumbs"><a href="index.html">Hem</a> / Truppen</div>
+    <h1>Truppen 2026</h1>
+    <p>Herr A i Division 2 Norra Götaland. Klicka på ett kort för statistik. Gul ram betyder fostrad i IFK Skövde.</p>
+  </div></section>
+  <section class="section"><div class="container">
+    <div class="filters" id="pos-filters" role="group" aria-label="Filtrera position">
+      <button class="chip" type="button" data-pos="all" aria-pressed="true">Alla</button>
+      <button class="chip" type="button" data-pos="GK">Målvakter</button>
+      <button class="chip" type="button" data-pos="DEF">Försvarare</button>
+      <button class="chip" type="button" data-pos="MID">Mittfältare</button>
+      <button class="chip" type="button" data-pos="FWD">Anfallare</button>
+      <button class="chip" type="button" data-pos="academy">Egna produkter</button>
+    </div>
+    <div class="players" id="players"></div>
+    <p style="font-size:.85rem;color:var(--muted);margin-top:14px">Tröjnummer, ålder och hemort verifieras av kansliet i <code>assets/js/data.js</code>. Statistiken kommer från matcher som publicerats i Fantasy.</p>
+  </div></section>
+  <section class="band"><div class="container">
+    <div><h2>Sätt din egen elva</h2><p>Välj 11 ur truppen, utse kapten och tävla mot hela Skövde i IFK Skövde Fantasy.</p></div>
+    <a class="btn btn--light" href="fantasy.html">Spela Fantasy</a>
+  </div></section>
+</main>
+<footer class="site-footer" id="site-footer"></footer>
+<script src="assets/js/data.js"></script>
+<script src="assets/js/main.js"></script>
+<script src="assets/js/shop.js"></script>
+<script src="assets/js/backend.js"></script>
+<script src="assets/js/scoring.js"></script>
+<script src="assets/js/engage.js"></script>
+<script src="assets/js/motion.js"></script>
+<script>
+document.addEventListener("ifk:ready", async () => {
+  const { ph, esc } = window.IFKUtil; const B = window.IFKBackend, S = window.IFKScoring; const fxId = B.fixtureId;
+  await B.ready;
+  let stats = []; try { stats = (await B.list("stats")).filter(s => s.published); } catch {}
+  const agg = (p) => { let g = 0, a = 0, pts = 0, apps = 0; stats.forEach(s => { const st = (s.players || {})[p.id]; if (st && st.min > 0) { apps++; g += st.g || 0; a += st.a || 0; pts += S.playerPoints(p.pos, st, s.result).total; } }); return { g, a, pts, apps }; };
+  const posName = { GK: "Målvakt", DEF: "Försvarare", MID: "Mittfältare", FWD: "Anfallare" };
+  const el = document.getElementById("players");
+  const render = (f) => {
+    el.innerHTML = IFK.squad.filter(p => f === "all" || (f === "academy" ? p.academy : p.pos === f)).map(p => { const s = agg(p); return `
+      <div class="pcard ${p.academy ? "pcard--academy" : ""}" tabindex="0" role="button" aria-label="${esc(p.name)}, visa statistik">
+        <div class="pcard__inner">
+          <div class="pcard__face">${ph(p.name, "", p.img)}<span class="pcard__num">${p.number}</span>
+            <div class="pcard__body"><h3>${esc(p.name)}</h3><span class="pcard__meta">${posName[p.pos]}${p.academy ? " · Egen produkt" : ""}</span></div></div>
+          <div class="pcard__face pcard__back"><span class="pcard__num" style="position:static">${p.number}</span><h3>${esc(p.name)}</h3><span class="pcard__meta" style="color:rgba(255,255,255,.75)">${posName[p.pos]} · Fantasyvärde ${p.price.toFixed(1)} M</span>
+            <div class="pcard__stats"><div><b>${s.apps}</b><span>matcher</span></div><div><b>${s.g}</b><span>mål</span></div><div><b>${s.a}</b><span>assist</span></div></div>
+            <p>${s.pts} fantasypoäng den här säsongen.${p.academy ? " Fostrad i IFK Skövdes akademi." : ""}</p>
+            <span class="pcard__hint">Klicka för att vända</span></div>
+        </div></div>`; }).join("");
+    el.querySelectorAll(".pcard").forEach(c => { const flip = () => c.classList.toggle("is-flipped"); c.addEventListener("click", flip); c.addEventListener("keydown", e => { if (e.key === "Enter" || e.key === " ") { e.preventDefault(); flip(); } }); });
+    document.querySelectorAll(".pcard--academy .pcard__face:first-child").forEach(f => f.style.outline = "2px solid #F5C400");
+  };
+  render("all");
+  document.getElementById("pos-filters").addEventListener("click", e => { const b = e.target.closest("[data-pos]"); if (!b) return; document.querySelectorAll("#pos-filters [data-pos]").forEach(x => x.setAttribute("aria-pressed", String(x === b))); render(b.dataset.pos); });
+});
+</script>
+</body>
+</html>

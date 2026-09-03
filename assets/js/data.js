@@ -27,12 +27,51 @@ window.IFK = {
     externalTable: "https://www.svenskfotboll.se/serier-cuper/tabell-och-resultat/div-2-norra-gotaland-herr-2026/131957/"
   },
 
+  /* Backend för inloggning, fantasy, tips och röstning.
+     Tomt apiKey = demoläge: allt sparas bara i besökarens webbläsare.
+     Fyll i från Firebase-konsolen (Projektinställningar → Dina appar → Webb). */
+  firebase: {
+    apiKey: "",
+    authDomain: "",
+    projectId: "",
+    appId: ""
+  },
+  /* E-postadresser som får öppna admin.html och mata in matchstatistik. */
+  admins: ["kansli@ifkskovdefk.se"],
+
+  /* Instagram: klistra in länkar till inlägg ni vill visa på startsidan. */
+  instagram: {
+    profile: "https://www.instagram.com/ifkskovdefk/",
+    posts: []
+  },
+
+  /* Fantasy-regler */
+  fantasy: {
+    budget: 100,
+    seasonName: "Säsongen 2026",
+    formation: { GK: [1, 1], DEF: [3, 5], MID: [2, 5], FWD: [1, 3] },
+    chips: [
+      { id: "tc", name: "Trippelkapten", text: "Kaptenen ger 3× poäng i en match." },
+      { id: "goals", name: "Målfest", text: "+2 extra poäng för varje mål dina spelare gör i en match." }
+    ],
+    /* Säsongen delas i två omgångar. Matcher räknas till den omgång vars datumintervall de faller i. */
+    rounds: [
+      { id: "r1", name: "Omgång 1 · Våren", from: "2026-04-01", to: "2026-07-15" },
+      { id: "r2", name: "Omgång 2 · Hösten", from: "2026-07-16", to: "2026-11-30" }
+    ],
+    prizes: {
+      round: "Topp 3 i varje omgång vinner merch från klubbshoppen.",
+      grand: ""        // Lämna tomt tills det stora slutpriset ska presenteras
+    }
+  },
+
   /* Rabatt-popup: visas efter `delaySeconds`, en gång per besökare (localStorage). */
   promo: {
     enabled: true,
     code: "IFK10",
     percent: 10,
     delaySeconds: 15,
+    timerMinutes: 5,          // nedräkning i popupen (0 = ingen)
     headline: "10 % på alla ordrar",
     text: "Som tack för att du stöttar IFK Skövde får du 10 % rabatt på hela shoppen. Koden läggs på automatiskt i kassan."
   },
@@ -91,6 +130,48 @@ window.IFK = {
     { name: "P8",            category: "ungdom", level: "Pojkar 8", coach: "", note: "", img: "team-p08.jpg", link: "https://www.svenskalag.se/ifkskovdefk-p08" },
     { name: "Knattefotboll", category: "knatte", level: "5–7 år", coach: "", note: "Lek, rörelse och första kontakten med bollen. Alla är välkomna.", img: "team-knatte.jpg", link: "https://www.svenskalag.se/ifkskovdefk/lag" },
     { name: "Dam & flick – Skövde KIK", category: "dam", level: "Samarbetsförening", coach: "", note: "Sedan 2023 driver IFK Skövde FK och Skövde KIK gemensamt kansli och administration. Flick- och damfotbollen spelar i Skövde KIK.", img: "team-skik.jpg", link: "https://www.skik.se/" }
+  ],
+
+  /* Herr A-truppen. pos: GK | DEF | MID | FWD. price = fantasyvärde (IFK-miljoner).
+     academy: true = fostrad i klubben. number: TODO verifiera tröjnummer. */
+  squad: [
+    { id: "norrgard",    name: "Linus Norrgård",        number: 1,  pos: "GK",  price: 5.0, academy: false, img: "player-norrgard.jpg" },
+    { id: "kikic",       name: "Aldin Kikic",           number: 12, pos: "GK",  price: 4.0, academy: false, img: "player-kikic.jpg" },
+    { id: "korpas",      name: "Melvin Korpås",         number: 2,  pos: "DEF", price: 5.5, academy: true,  img: "player-korpas.jpg" },
+    { id: "klebe",       name: "Anthony Klebe",         number: 4,  pos: "DEF", price: 5.0, academy: false, img: "player-klebe.jpg" },
+    { id: "mahisa",      name: "Edwin Mahisa",          number: 3,  pos: "DEF", price: 5.5, academy: false, img: "player-mahisa.jpg" },
+    { id: "korjenic",    name: "Liam Korjenic",         number: 5,  pos: "DEF", price: 4.5, academy: true,  img: "player-korjenic.jpg" },
+    { id: "sundelius",   name: "Jacob Sundelius",       number: 6,  pos: "DEF", price: 4.5, academy: false, img: "player-sundelius.jpg" },
+    { id: "saran",       name: "Ammar Saran",           number: 13, pos: "DEF", price: 4.0, academy: false, img: "player-saran.jpg" },
+    { id: "gustavsson",  name: "Simon Gustavsson",      number: 14, pos: "DEF", price: 4.5, academy: true,  img: "player-gustavsson.jpg" },
+    { id: "olsson",      name: "Victor Olsson",         number: 15, pos: "DEF", price: 4.0, academy: false, img: "player-olsson.jpg" },
+    { id: "hattevik",    name: "Henry Hattevik",        number: 16, pos: "DEF", price: 4.0, academy: true,  img: "player-hattevik.jpg" },
+    { id: "nyberg",      name: "Shanti Nyberg",         number: 17, pos: "DEF", price: 4.0, academy: false, img: "player-nyberg.jpg" },
+    { id: "ljungquist",  name: "Erik Ljungquist",       number: 18, pos: "DEF", price: 4.5, academy: false, img: "player-ljungquist.jpg" },
+    { id: "eabraham",    name: "Elmar Abraham",         number: 8,  pos: "MID", price: 7.5, academy: false, img: "player-eabraham.jpg" },
+    { id: "gebremichael",name: "Saimon Gebremichael",   number: 7,  pos: "MID", price: 6.5, academy: false, img: "player-gebremichael.jpg" },
+    { id: "abdalrahman", name: "Ahmed Abdalrahman",     number: 10, pos: "MID", price: 6.0, academy: false, img: "player-abdalrahman.jpg" },
+    { id: "axelsson",    name: "Axel Axelsson",         number: 19, pos: "MID", price: 5.5, academy: true,  img: "player-axelsson.jpg" },
+    { id: "sastre",      name: "Juan Rodriguez Sastre", number: 20, pos: "MID", price: 6.0, academy: false, img: "player-sastre.jpg" },
+    { id: "sabraham",    name: "Sargon Abraham",        number: 9,  pos: "FWD", price: 8.5, academy: false, img: "player-sabraham.jpg" },
+    { id: "mukuka",      name: "Chewe Mukuka",          number: 11, pos: "FWD", price: 8.0, academy: false, img: "player-mukuka.jpg" },
+    { id: "ilia",        name: "Pitar Ilia",            number: 21, pos: "FWD", price: 7.0, academy: false, img: "player-ilia.jpg" },
+    { id: "salihovic",   name: "Edin Salihovic",        number: 22, pos: "FWD", price: 6.5, academy: false, img: "player-salihovic.jpg" },
+    { id: "mama",        name: "Ninous Mama",           number: 23, pos: "FWD", price: 6.0, academy: true,  img: "player-mama.jpg" }
+  ],
+
+  /* Historiequiz. correct = index i answers. */
+  quiz: [
+    { q: "Vilket år bildades IFK Skövde?", answers: ["1895", "1907", "1921", "1934"], correct: 1, why: "Den 23 september 1907 i Västra Folkskolan." },
+    { q: "Vilket nummer i ordningen var IFK Skövde bland Sveriges IFK-föreningar?", answers: ["Trettonde", "Femte", "Tjugonde", "Andra"], correct: 0, why: "Därav romerska siffran XIII i det ursprungliga namnet." },
+    { q: "Vem valdes till föreningens förste ordförande?", answers: ["Sam Hessel", "Gustav Nitzén", "Christian Tersmeden", "Ragnar Selander"], correct: 2, why: "Tersmeden ledde den första styrelsen." },
+    { q: "Vilket år blev fotbollen en egen förening?", answers: ["1975", "1991", "2003", "2015"], correct: 1, why: "Då delades IFK Skövde upp i separata föreningar per idrott." },
+    { q: "Vad heter hemmaarenan?", answers: ["Arena Skövde", "Södermalms IP", "Lillegårdens IP", "Rydals IP"], correct: 1, why: "Klubbens hem sedan generationer." },
+    { q: "Hur många poäng tog laget när serien vanns 2024?", answers: ["52", "58", "61", "67"], correct: 2, why: "19 vinster, 4 oavgjorda, 3 förluster." },
+    { q: "Vilken förening samarbetar IFK Skövde FK med sedan 2023?", answers: ["Skövde AIK", "Skara FC", "Skövde KIK", "Tibro AIK"], correct: 2, why: "Gemensamt kansli, administration och matchställ." },
+    { q: "Varför är svart en klubbfärg i dag?", answers: ["Det var IFK:s ursprungsfärg", "Från Skövde KIK:s färger", "Sponsorkrav", "Slumpen"], correct: 1, why: "Det gemensamma matchstället vävde ihop blått, svart och vitt." },
+    { q: "Vilken serie spelar Herr A i 2026?", answers: ["Ettan Södra", "Division 2 Norra Götaland", "Division 3", "Superettan"], correct: 1, why: "Målet är Ettan igen, och Superettan 2030." },
+    { q: "Vad är klubbens uttalade mål till 2030?", answers: ["Allsvenskan", "Superettan", "Ny arena", "Damlag i Elitettan"], correct: 1, why: "Vision 2030: Superettan." }
   ],
 
   /* Organisation. Lägg till/ta bort personer fritt. */
@@ -154,13 +235,13 @@ window.IFK = {
     { id: "borta-2026",  name: "Matchtröja Borta 2026", cat: "Matchkläder", price: 699, sizes: ["S","M","L","XL","XXL"], img: "prod-borta.jpg", desc: "Vit bortatröja med blå detaljer." },
     { id: "hemma-barn",  name: "Matchtröja Hemma Barn", cat: "Barn", price: 549, sizes: ["116","128","140","152","164"], img: "prod-hemma-barn.jpg", desc: "Hemmatröjan i barnstorlekar." },
     { id: "trana",       name: "Träningströja", cat: "Träning", price: 449, sizes: ["S","M","L","XL","XXL"], img: "prod-traning.jpg", desc: "Lätt funktionströja i klubbens blå." },
-    { id: "hoodie",      name: "Klubbhoodie", cat: "Supporter", price: 599, sizes: ["S","M","L","XL","XXL"], badge: "Populär", img: "prod-hoodie.jpg", desc: "Svart hoodie med broderat klubbmärke." },
+    { id: "hoodie",      name: "Klubbhoodie", cat: "Supporter", price: 599, sizes: ["S","M","L","XL","XXL"], badge: "Populär", stock: 4, img: "prod-hoodie.jpg", desc: "Svart hoodie med broderat klubbmärke." },
     { id: "halsduk",     name: "Halsduk IFK Skövde", cat: "Supporter", price: 199, sizes: [], img: "prod-halsduk.jpg", desc: "Stickad halsduk i blått, svart och vitt." },
     { id: "keps",        name: "Keps", cat: "Supporter", price: 249, sizes: [], img: "prod-keps.jpg", desc: "Justerbar keps med klubbmärke." },
     { id: "flaska",      name: "Vattenflaska 0,7 l", cat: "Träning", price: 149, sizes: [], img: "prod-flaska.jpg", desc: "Klubbens flaska till träning och match." },
     { id: "mossa",       name: "Mössa", cat: "Supporter", price: 199, sizes: [], img: "prod-mossa.jpg", desc: "Varm mössa för höstmatcherna." },
     { id: "sasongskort", name: "Säsongskort Herr A 2027", cat: "Supporter", price: 900, sizes: [], badge: "Stötta klubben", img: "prod-sasongskort.jpg", desc: "Alla hemmamatcher i seriespelet 2027. Levereras digitalt." },
     { id: "shorts-barn", name: "Träningsshorts Barn", cat: "Barn", price: 249, sizes: ["116","128","140","152","164"], img: "prod-shorts-barn.jpg", desc: "Svarta shorts i barnstorlekar." },
-    { id: "paket",       name: "Supporterpaket", cat: "Supporter", price: 549, compareAt: 647, sizes: [], badge: "Spara 98 kr", img: "prod-paket.jpg", desc: "Halsduk, keps och mössa i ett paket." }
+    { id: "paket",       name: "Supporterpaket", cat: "Supporter", price: 549, compareAt: 647, sizes: [], badge: "Spara 98 kr", stock: 3, img: "prod-paket.jpg", desc: "Halsduk, keps och mössa i ett paket." }
   ]
 };

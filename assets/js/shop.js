@@ -11,8 +11,9 @@
 
     /* ----- Beräkningar ----- */
     const validCode = (c) => c && c.trim().toUpperCase() === D.promo.code.toUpperCase();
+    const unit = (i) => byId(i.id).price + (i.extra || 0);
     function totals() {
-      const sub = cart.reduce((n, i) => n + byId(i.id).price * i.qty, 0);
+      const sub = cart.reduce((n, i) => n + unit(i) * i.qty, 0);
       const disc = validCode(discount) ? Math.round(sub * D.promo.percent / 100) : 0;
       const afterDisc = sub - disc;
       const pickup = ($("input[name=delivery]:checked") || {}).value === "pickup";
@@ -21,12 +22,12 @@
     }
 
     /* ----- Varukorg ----- */
-    function add(id, size) {
+    function add(id, size, extra = 0) {
       const p = byId(id);
       if (p.sizes.length && !size) { toast("Välj storlek först"); return; }
-      const key = `${id}|${size || ""}`;
+      const key = `${id}|${size || ""}|${extra || 0}`;
       const found = cart.find((i) => i.key === key);
-      if (found) found.qty += 1; else cart.push({ key, id, size: size || "", qty: 1 });
+      if (found) found.qty += 1; else cart.push({ key, id, size: size || "", qty: 1, extra: extra || 0 });
       save(); toast(`${p.name} tillagd i varukorgen`); openDrawer();
     }
     function setQty(key, qty) { const i = cart.find((x) => x.key === key); if (!i) return; i.qty = qty; if (i.qty <= 0) cart = cart.filter((x) => x.key !== key); save(); }
@@ -49,11 +50,11 @@
           ${cart.length ? cart.map((i) => { const p = byId(i.id); return `
             <div class="cart-item">
               ${ph(p.name, "", p.img)}
-              <div><b>${esc(p.name)}</b><small>${i.size ? `Storlek ${esc(i.size)} · ` : ""}${money(p.price)}</small>
+              <div><b>${esc(p.name)}</b><small>${i.size ? `${esc(i.size)} · ` : ""}${money(unit(i))}</small>
                 <div class="qty"><button data-q="${esc(i.key)}" data-d="-1" aria-label="Minska">−</button><span>${i.qty}</span><button data-q="${esc(i.key)}" data-d="1" aria-label="Öka">+</button></div>
                 <button class="cart-item__remove" data-rm="${esc(i.key)}">Ta bort</button></div>
-              <div class="cart-item__price">${money(p.price * i.qty)}</div>
-            </div>`; }).join("")
+              <div class="cart-item__price">${money(unit(i) * i.qty)}</div>
+            </div>`; }).join("") + upsell()
           : `<p class="empty">Varukorgen är tom.<br><a href="${root}shop.html">Till shoppen</a></p>`}
           ${cart.length ? `<div class="discount-row"><input id="drawer-code" placeholder="Rabattkod" value="${esc(discount)}" aria-label="Rabattkod"><button class="btn btn--dark btn--sm" id="drawer-apply" type="button">Använd</button></div>
             ${validCode(discount) ? `<p class="notice notice--ok" style="margin:0">Koden ${esc(D.promo.code)} ger ${D.promo.percent} % rabatt.</p>` : `<p style="font-size:.85rem;color:var(--muted);margin:0">Tips: koden <b>${esc(D.promo.code)}</b> ger ${D.promo.percent} % på hela ordern.</p>`}` : ""}
@@ -70,8 +71,15 @@
       $("#drawer-close").addEventListener("click", closeDrawer);
       $$("[data-q]", drawer).forEach((b) => b.addEventListener("click", () => { const i = cart.find((x) => x.key === b.dataset.q); setQty(b.dataset.q, i.qty + Number(b.dataset.d)); }));
       $$("[data-rm]", drawer).forEach((b) => b.addEventListener("click", () => setQty(b.dataset.rm, 0)));
+      $$("[data-upsell]", drawer).forEach((b) => b.addEventListener("click", () => { const p = byId(b.dataset.upsell); const key = `${p.id}||0`; const f = cart.find((i) => i.key === key); if (f) f.qty++; else cart.push({ key, id: p.id, size: "", qty: 1, extra: 0 }); save(); toast(`${p.name} tillagd`); }));
       const apply = $("#drawer-apply"); if (apply) apply.addEventListener("click", () => applyCode($("#drawer-code").value));
       const chk = $("#drawer-checkout"); if (chk) chk.addEventListener("click", () => { closeDrawer(); if (document.body.dataset.page === "shop") { document.getElementById("kassa").scrollIntoView({ behavior: "smooth" }); } });
+    }
+    /* Merförsäljning i varukorgen: föreslå en billig supporterpryl som inte redan ligger i korgen */
+    function upsell() {
+      const cands = D.products.filter((p) => p.cat === "Supporter" && !p.sizes.length && p.price <= 250 && !cart.some((i) => i.id === p.id));
+      const p = cands[0]; if (!p) return "";
+      return `<div class="upsell"><div>${ph(p.name, "", p.img)}</div><div><b>Komplettera med ${esc(p.name)}</b><span>${money(p.price)} · passar till allt i blått</span></div><button class="btn btn--dark btn--sm" type="button" data-upsell="${esc(p.id)}">Lägg till</button></div>`;
     }
     function applyCode(v) {
       if (validCode(v)) { discount = v.trim().toUpperCase(); save(); toast(`${D.promo.percent} % rabatt tillagd`); }
@@ -98,6 +106,7 @@
         grid.innerHTML = list.map((p) => `
           <article class="product" id="p-${esc(p.id)}">
             ${p.badge ? `<span class="product__badge">${esc(p.badge)}</span>` : ""}
+            ${p.stock !== undefined && p.stock <= 5 ? `<span class="product__badge product__badge--low">Endast ${p.stock} kvar</span>` : ""}
             ${ph(p.name, "", p.img)}
             <div class="product__body">
               <span class="product__cat">${esc(p.cat)}</span>
@@ -126,7 +135,7 @@
       el.innerHTML = `
         <div class="card summary">
           <h3>Din order</h3>
-          ${cart.length ? cart.map((i) => { const p = byId(i.id); return `<div style="display:flex;justify-content:space-between;gap:10px;font-size:.92rem;padding:6px 0;border-bottom:1px solid var(--line)"><span>${i.qty} × ${esc(p.name)}${i.size ? ` (${esc(i.size)})` : ""}</span><span>${money(p.price * i.qty)}</span></div>`; }).join("") : `<p class="empty" style="padding:16px 0">Varukorgen är tom.</p>`}
+          ${cart.length ? cart.map((i) => { const p = byId(i.id); return `<div style="display:flex;justify-content:space-between;gap:10px;font-size:.92rem;padding:6px 0;border-bottom:1px solid var(--line)"><span>${i.qty} × ${esc(p.name)}${i.size ? ` (${esc(i.size)})` : ""}</span><span>${money(unit(i) * i.qty)}</span></div>`; }).join("") : `<p class="empty" style="padding:16px 0">Varukorgen är tom.</p>`}
           <div class="discount-row"><input id="code-input" placeholder="Rabattkod" value="${esc(discount)}" aria-label="Rabattkod"><button class="btn btn--dark btn--sm" type="button" id="code-apply">Använd</button></div>
           <div class="totals" style="margin-top:8px">
             <div><span>Delsumma</span><span>${money(t.sub)}</span></div>
@@ -148,7 +157,7 @@
         if (!form.reportValidity()) return;
         const f = Object.fromEntries(new FormData(form).entries());
         const t = totals();
-        const lines = cart.map((i) => { const p = byId(i.id); return `${i.qty} x ${p.name}${i.size ? ` (${i.size})` : ""} – ${money(p.price * i.qty)}`; });
+        const lines = cart.map((i) => { const p = byId(i.id); return `${i.qty} x ${p.name}${i.size ? ` (${i.size})` : ""} – ${money(unit(i) * i.qty)}`; });
         const orderNo = `IFK-${Date.now().toString(36).toUpperCase()}`;
         const text = [
           `Order ${orderNo}`, "", ...lines, "",

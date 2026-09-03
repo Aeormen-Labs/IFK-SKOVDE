@@ -48,9 +48,10 @@
   <section class="section">
     <div class="container">
       <div class="section-head"><div><span class="eyebrow">Säsongen 2026</span><h2>Senaste &amp; kommande</h2></div><a class="btn btn--ghost btn--sm" href="matcher.html">Alla matcher</a></div>
-      <div class="grid grid--2" style="align-items:start">
+      <div class="grid grid--3" style="align-items:start">
         <div><h3 style="margin-bottom:12px">Resultat</h3><div class="fixture-list" id="home-results"></div></div>
         <div><h3 style="margin-bottom:12px">Kommande</h3><div class="fixture-list" id="home-upcoming"></div></div>
+        <div id="tip-widget"></div>
       </div>
     </div>
   </section>
@@ -88,6 +89,28 @@
     </div>
   </section>
 
+  <section class="section">
+    <div class="container">
+      <div class="grid grid--2" style="align-items:center">
+        <div>
+          <span class="eyebrow">Nytt</span>
+          <h2>IFK Skövde Fantasy</h2>
+          <p class="lead">Välj 11 ur truppen för 100 IFK-miljoner, utse kapten och samla poäng varje match. Tippa resultat, rösta på matchens lirare och tävla i egna ligor med kompisarna.</p>
+          <p><b>Topp 3 i varje omgång vinner merch från shoppen.</b> Säsongen är delad i vår och höst, och totalsegraren får ett stort pris som presenteras senare.</p>
+          <div class="hero__cta" style="margin-top:14px"><a class="btn btn--primary" href="fantasy.html">Sätt din elva</a><a class="btn btn--ghost" href="spelare.html">Se truppen</a></div>
+        </div>
+        <div id="motm-widget"></div>
+      </div>
+    </div>
+  </section>
+
+  <section class="section section--alt">
+    <div class="container">
+      <div class="section-head"><div><span class="eyebrow">Följ oss</span><h2>@ifkskovdefk</h2></div><a class="btn btn--ghost btn--sm" href="https://www.instagram.com/ifkskovdefk/" target="_blank" rel="noopener">Följ på Instagram</a></div>
+      <div id="instagram"></div>
+    </div>
+  </section>
+
   <section class="band">
     <div class="container">
       <div><h2>Bär färgerna</h2><p>Matchtröjan 2026, hoodies, halsdukar och säsongskort. Varje köp går tillbaka till verksamheten. Just nu 10 % på allt med koden <b>IFK10</b>.</p></div>
@@ -101,6 +124,10 @@
 <script src="assets/js/data.js"></script>
 <script src="assets/js/main.js"></script>
 <script src="assets/js/shop.js"></script>
+<script src="assets/js/backend.js"></script>
+<script src="assets/js/scoring.js"></script>
+<script src="assets/js/engage.js"></script>
+<script src="assets/js/motion.js"></script>
 <script>
 document.addEventListener("ifk:ready", () => {
   const { renderNextMatch, renderFixtureList, renderTable } = window.IFKRender;

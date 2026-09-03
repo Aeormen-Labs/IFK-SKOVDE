@@ -14,7 +14,10 @@ Statisk flersidig webbplats i ren HTML, CSS och JavaScript. Inget byggsteg.
 | `historia.html` | Tidslinje 1907 → i dag, färgerna |
 | `vision.html` | Superettan 2030: vägen dit, byggstenar, målsiffror |
 | `kontakt.html` | Kansli, kontaktformulär, hitta hit, börja spela, partner, engagera dig |
-| `shop.html` | Shop med kategorier, storleksval, varukorg, rabattkod och kassa |
+| `shop.html` | Shop med kategorier, tröjbyggare (namn + nummer med förhandsvisning), varukorg med merförsäljning, rabattkod och kassa |
+| `spelare.html` | Truppen: spelarkort som vänds och visar säsongsstatistik |
+| `fantasy.html` | IFK Skövde Fantasy: konto, lagval, poäng, tabeller, ligor. Tippa resultatet och rösta på matchens lirare |
+| `admin.html` | Kansliet: mata in matchstatistik och publicera omgångar (kräver adminkonto) |
 
 ## Uppdatera innehåll
 
@@ -26,6 +29,26 @@ Allt som ändras ofta ligger i **`assets/js/data.js`**:
 - `club` – adress, e-post, telefon, Swish, sociala medier. Poster märkta `TODO` behöver verifieras.
 - `promo` – rabatt-popupen: kod, procent, fördröjning (sekunder), av/på.
 - `shop` – frakt, fri frakt-gräns, order-e-post och `orderEndpoint`.
+
+## Fantasy, tips och röstning
+
+Allt interaktivt går genom `assets/js/backend.js` som har två lägen:
+
+- **Demoläge** (standard): inget är ifyllt i `IFK.firebase`. Konton, lag och poäng sparas
+  bara i besökarens egen webbläsare. Bra för att testa, men tabeller delas inte.
+- **Firebase**: skapa ett gratis Firebase-projekt, aktivera *Authentication* (E-post/lösenord,
+  gärna Google) och *Firestore*. Klistra in `apiKey`, `authDomain`, `projectId` och `appId`
+  i `IFK.firebase` i `data.js`. Ladda upp `firebase/firestore.rules` som säkerhetsregler och
+  byt ut adminadressen där och i `IFK.admins`.
+
+Så går en omgång till:
+1. Supportrar sätter sin elva på `fantasy.html` före avspark. Laget låses automatiskt.
+2. Efter matchen öppnar kansliet `admin.html`, fyller i minuter, mål, assist osv. per spelare
+   och resultatet. Fansens röst på matchens lirare är förifylld.
+3. **Publicera omgången** räknar poäng för alla lag, tipsen och uppdaterar tabellerna.
+4. Lägg även in resultatet i `fixtures` i `data.js` så att spelschemat visar rätt.
+
+Poängreglerna finns i `assets/js/scoring.js` och visas under fliken Regler.
 
 ## Beställningar från shoppen
 
@@ -65,3 +88,5 @@ Se `assets/img/README.md` för lista över bildfiler som ska läggas in.
 - Entrépriser och matchdagsinfo i `matcher.html`.
 - Produkter, priser och storlekar i shoppen.
 - Målsiffror på visionssidan (`vision.html`).
+- Tröjnummer och `academy`-markering i `squad` i `data.js`.
+- Instagram-inlägg att visa på startsidan (`IFK.instagram.posts`).
