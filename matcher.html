@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="sv">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Matcher &amp; tabell – IFK Skövde FK</title>
+<meta name="description" content="Spelschema, resultat och tabell för IFK Skövde FK i Division 2 Norra Götaland 2026.">
+<meta name="theme-color" content="#0A3A8C">
+<link rel="icon" href="assets/img/logo.svg" type="image/svg+xml">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@600;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="assets/css/style.css">
+</head>
+<body data-page="matcher">
+<a class="skip-link" href="#main">Hoppa till innehåll</a>
+<header class="site-header" id="site-header"></header>
+<main id="main">
+  <section class="page-hero"><div class="container">
+    <div class="crumbs"><a href="index.html">Hem</a> / Matcher</div>
+    <h1>Matcher &amp; tabell</h1>
+    <p>Herr A i Division 2 Norra Götaland 2026. Hemmamatcher spelas på Södermalms IP. Ungdomslagens matcher hittar du på respektive lagsida under <a href="lag.html">Våra lag</a>.</p>
+  </div></section>
+  <nav class="subnav" aria-label="Sektioner"><div class="container"><a href="#nasta">Nästa match</a><a href="#schema">Spelschema</a><a href="#tabell">Tabell</a><a href="#arena">Hitta hit</a></div></nav>
+
+  <section class="section" id="nasta"><div class="container">
+    <div class="grid grid--2" style="align-items:start">
+      <div id="next-match"></div>
+      <div class="card">
+        <h3>Matchdag på Södermalms IP</h3>
+        <dl class="dl">
+          <dt>Entré</dt><dd>Vuxen 100 kr · Pensionär/student 60 kr · Under 16 år gratis</dd>
+          <dt>Kiosk</dt><dd>Öppnar en timme före avspark. Swish och kort.</dd>
+          <dt>Parkering</dt><dd>Fri parkering vid arenan, begränsat antal platser.</dd>
+          <dt>Säsongskort</dt><dd><a href="shop.html#p-sasongskort">Köp i shoppen</a> och gå på alla hemmamatcher.</dd>
+        </dl>
+        <p style="font-size:.8rem;color:var(--muted);margin:10px 0 0">Priser och tider är exempel. Uppdatera i matcher.html.</p>
+      </div>
+    </div>
+  </div></section>
+
+  <section class="section section--alt" id="schema"><div class="container">
+    <div class="section-head"><div><span class="eyebrow">Herr A · 2026</span><h2>Spelschema &amp; resultat</h2></div>
+      <a class="btn btn--ghost btn--sm" id="ics-link" href="#" download="ifk-skovde-hemmamatcher.ics">Lägg till hemmamatcher i kalendern</a></div>
+    <div class="filters" id="fixture-filters" role="group" aria-label="Filtrera matcher">
+      <button class="chip" type="button" data-f="all" aria-pressed="true">Alla</button>
+      <button class="chip" type="button" data-f="upcoming">Kommande</button>
+      <button class="chip" type="button" data-f="played">Spelade</button>
+      <button class="chip" type="button" data-f="home">Hemma</button>
+      <button class="chip" type="button" data-f="away">Borta</button>
+    </div>
+    <div class="fixture-list" id="fixtures"></div>
+  </div></section>
+
+  <section class="section" id="tabell"><div class="container">
+    <div class="section-head"><div><span class="eyebrow">Tabell</span><h2>Division 2 Norra Götaland</h2></div></div>
+    <div id="table"></div>
+  </div></section>
+
+  <section class="section section--alt" id="arena"><div class="container">
+    <div class="grid grid--2" style="align-items:center">
+      <div class="ph" data-img="arena.jpg"><img src="assets/img/arena.jpg" alt="" onerror="this.remove()"><span class="ph__label">Bild: Södermalms IP</span></div>
+      <div><span class="eyebrow">Hemmaarena</span><h2>Södermalms IP</h2>
+        <p>Klubbens hem sedan generationer. Naturgräs, läktare och kiosk mitt i Skövde. <a href="kontakt.html#hitta">Vägbeskrivning och parkering</a>.</p>
+        <a class="btn btn--primary" href="kontakt.html#hitta">Hitta hit</a></div>
+    </div>
+  </div></section>
+</main>
+<footer class="site-footer" id="site-footer"></footer>
+<script src="assets/js/data.js"></script>
+<script src="assets/js/main.js"></script>
+<script src="assets/js/shop.js"></script>
+<script>
+document.addEventListener("ifk:ready", () => {
+  const { renderNextMatch, renderFixtureList, renderTable } = window.IFKRender;
+  const { fixtures } = window.IFKFixtures;
+  renderNextMatch(document.getElementById("next-match"));
+  renderTable(document.getElementById("table"));
+  const list = document.getElementById("fixtures");
+  const apply = (f) => renderFixtureList(list, fixtures.filter(x =>
+    f === "all" ? true : f === "upcoming" ? !x.score : f === "played" ? !!x.score : f === "home" ? x.home : !x.home));
+  apply("all");
+  document.getElementById("fixture-filters").addEventListener("click", e => {
+    const b = e.target.closest("[data-f]"); if (!b) return;
+    document.querySelectorAll("#fixture-filters [data-f]").forEach(x => x.setAttribute("aria-pressed", String(x === b)));
+    apply(b.dataset.f);
+  });
+  // iCal med kommande hemmamatcher
+  const pad = n => String(n).padStart(2, "0");
+  const ics = ["BEGIN:VCALENDAR","VERSION:2.0","PRODID:-//IFK Skövde FK//Matcher//SV"];
+  fixtures.filter(f => !f.score && f.home).forEach(f => {
+    const s = f.d, e = new Date(s.getTime() + 2 * 3600e3);
+    const st = d => `${d.getFullYear()}${pad(d.getMonth()+1)}${pad(d.getDate())}T${pad(d.getHours())}${pad(d.getMinutes())}00`;
+    ics.push("BEGIN:VEVENT",`UID:${f.date}-${f.opponent.replace(/\W/g,"")}@ifkskovdefk`,`DTSTART:${st(s)}`,`DTEND:${st(e)}`,`SUMMARY:IFK Skövde – ${f.opponent}`,`LOCATION:${IFK.club.ground}, ${IFK.club.city}`,"END:VEVENT");
+  });
+  ics.push("END:VCALENDAR");
+  document.getElementById("ics-link").href = "data:text/calendar;charset=utf-8," + encodeURIComponent(ics.join("\r\n"));
+});
+</script>
+</body>
+</html>

@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="sv">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Kontakt – IFK Skövde FK</title>
+<meta name="description" content="Kontakta IFK Skövde FK: kansli, hitta till Södermalms IP, börja spela, bli partner eller engagera dig.">
+<meta name="theme-color" content="#0A3A8C">
+<link rel="icon" href="assets/img/logo.svg" type="image/svg+xml">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@600;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="assets/css/style.css">
+</head>
+<body data-page="kontakt">
+<a class="skip-link" href="#main">Hoppa till innehåll</a>
+<header class="site-header" id="site-header"></header>
+<main id="main">
+  <section class="page-hero"><div class="container">
+    <div class="crumbs"><a href="index.html">Hem</a> / Kontakt</div>
+    <h1>Kontakt</h1>
+    <p>Kansliet delas med Skövde KIK och finns på Södermalms IP. Välj ärende nedan så hamnar du rätt.</p>
+  </div></section>
+  <nav class="subnav" aria-label="Sektioner"><div class="container"><a href="#kansli">Kansli</a><a href="#hitta">Hitta hit</a><a href="#borja">Börja spela</a><a href="#partner">Partner</a><a href="#engagera">Engagera dig</a></div></nav>
+
+  <section class="section" id="kansli"><div class="container">
+    <div class="contact-grid">
+      <div class="card"><h3>Kansliet</h3>
+        <dl class="dl" id="contact-dl"></dl>
+        <p style="font-size:.85rem;color:var(--muted);margin:14px 0 0">Öppettider: vardagar 09–15. Övrig tid, mejla så återkommer vi.</p></div>
+      <div class="card"><h3>Skriv till oss</h3>
+        <form id="contact-form">
+          <div class="field"><label for="c-subject">Ärende</label>
+            <select id="c-subject" name="subject"><option>Allmän fråga</option><option>Börja spela</option><option>Partner &amp; sponsring</option><option>Ledare / ideell</option><option>Media</option><option>Shop &amp; beställning</option></select></div>
+          <div class="field field--row"><div><label for="c-name">Namn</label><input id="c-name" name="name" required autocomplete="name"></div><div><label for="c-email">E-post</label><input id="c-email" name="email" type="email" required autocomplete="email"></div></div>
+          <div class="field"><label for="c-msg">Meddelande</label><textarea id="c-msg" name="message" rows="5" required></textarea></div>
+          <button class="btn btn--primary" type="submit">Skicka</button>
+        </form></div>
+    </div>
+  </div></section>
+
+  <section class="section section--alt" id="hitta"><div class="container">
+    <div class="section-head"><div><span class="eyebrow">Södermalms IP</span><h2>Hitta hit</h2></div></div>
+    <div class="contact-grid">
+      <a class="map" id="map-link" href="#" target="_blank" rel="noopener">Öppna Södermalms IP i Google Maps</a>
+      <div><dl class="dl">
+        <dt>Adress</dt><dd id="addr"></dd>
+        <dt>Bil</dt><dd>Fri parkering vid arenan. Vid större matcher, använd gärna Stadshusets parkering och promenera 10 minuter.</dd>
+        <dt>Buss</dt><dd>Stadsbuss till hållplats Södermalm, cirka 3 minuters promenad.</dd>
+        <dt>Tåg</dt><dd>Skövde resecentrum ligger cirka 15 minuters promenad från arenan.</dd>
+        <dt>Tillgänglighet</dt><dd>Plats för rullstol vid läktaren, kontakta kansliet före match så hjälper vi till.</dd>
+      </dl></div>
+    </div>
+  </div></section>
+
+  <section class="section" id="borja"><div class="container">
+    <div class="grid grid--3">
+      <div class="card"><span class="eyebrow">Börja spela</span><h3>Barn &amp; ungdom</h3><p style="color:var(--muted)">Alla barn är välkomna, ingen erfarenhet krävs. Knattefotboll från 5 år, sedan lag i varje årskull. Flickor hänvisas till vår samarbetsförening Skövde KIK.</p><a class="btn btn--primary btn--sm" href="#kansli" onclick="document.getElementById('c-subject').value='Börja spela'">Anmäl intresse</a></div>
+      <div class="card" id="partner"><span class="eyebrow">Partner</span><h3>Sponsra IFK Skövde</h3><p style="color:var(--muted)">Partnerpaket från skylt på Södermalms IP till huvudpartner med matchvärdskap och nätverksträffar. Alla paket stöttar akademin och vägen mot Superettan.</p><a class="btn btn--primary btn--sm" href="#kansli" onclick="document.getElementById('c-subject').value='Partner & sponsring'">Kontakta marknad</a></div>
+      <div class="card" id="engagera"><span class="eyebrow">Engagera dig</span><h3>Ledare &amp; ideella</h3><p style="color:var(--muted)">Tränare, lagledare, matchvärd, kiosk eller styrelse. Vi utbildar dig och du blir en del av Kamraterna.</p><a class="btn btn--primary btn--sm" href="#kansli" onclick="document.getElementById('c-subject').value='Ledare / ideell'">Hör av dig</a></div>
+    </div>
+  </div></section>
+</main>
+<footer class="site-footer" id="site-footer"></footer>
+<script src="assets/js/data.js"></script>
+<script src="assets/js/main.js"></script>
+<script src="assets/js/shop.js"></script>
+<script>
+document.addEventListener("ifk:ready", () => {
+  const { esc, toast } = window.IFKUtil; const c = IFK.club;
+  document.getElementById("contact-dl").innerHTML = `<dt>Adress</dt><dd>${esc(c.address)}</dd><dt>E-post</dt><dd><a href="mailto:${esc(c.email)}">${esc(c.email)}</a></dd><dt>Telefon</dt><dd><a href="tel:${esc(c.phone.replace(/\s|-/g,''))}">${esc(c.phone)}</a></dd><dt>Swish</dt><dd>${esc(c.swish)}</dd>${c.orgNr ? `<dt>Org.nr</dt><dd>${esc(c.orgNr)}</dd>` : ""}<dt>Medlemssidor</dt><dd><a href="${esc(c.social.svenskalag)}" target="_blank" rel="noopener">svenskalag.se/ifkskovdefk</a></dd>`;
+  document.getElementById("addr").textContent = c.address;
+  document.getElementById("map-link").href = "https://www.google.com/maps/search/?api=1&query=" + encodeURIComponent(c.ground + ", " + c.city);
+  document.getElementById("contact-form").addEventListener("submit", e => {
+    e.preventDefault(); const f = Object.fromEntries(new FormData(e.target).entries());
+    location.href = `mailto:${encodeURIComponent(c.email)}?subject=${encodeURIComponent(f.subject + " – " + f.name)}&body=${encodeURIComponent(f.message + "\n\n" + f.name + "\n" + f.email)}`;
+    toast("Ditt e-postprogram öppnas med meddelandet");
+  });
+});
+</script>
+</body>
+</html>

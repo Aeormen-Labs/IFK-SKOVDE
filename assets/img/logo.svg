@@ -1,0 +1,8 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 110" role="img" aria-label="IFK Skövde FK klubbmärke (platshållare)">
+  <!-- PLATSHÅLLARE: byt ut mot klubbens riktiga märke (behåll filnamnet logo.svg eller uppdatera main.js). -->
+  <path d="M50 4 L92 18 V58 C92 82 72 98 50 106 C28 98 8 82 8 58 V18 Z" fill="#0A3A8C"/>
+  <path d="M50 12 L84 23 V58 C84 77 68 90 50 97 C32 90 16 77 16 58 V23 Z" fill="#fff"/>
+  <path d="M50 20 L76 28.5 V58 C76 72 64 82 50 88 C36 82 24 72 24 58 V28.5 Z" fill="#121417"/>
+  <text x="50" y="63" text-anchor="middle" font-family="Barlow Condensed, Arial Narrow, Arial, sans-serif" font-weight="700" font-size="30" fill="#fff">IFK</text>
+  <rect x="24" y="66" width="52" height="4" fill="#0A3A8C"/>
+</svg>

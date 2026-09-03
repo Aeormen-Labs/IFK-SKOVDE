@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="sv">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Shop – IFK Skövde FK</title>
+<meta name="description" content="Köp matchtröjor, hoodies, halsdukar och säsongskort från IFK Skövde FK. 10 % rabatt med koden IFK10.">
+<meta name="theme-color" content="#0A3A8C">
+<link rel="icon" href="assets/img/logo.svg" type="image/svg+xml">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@600;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="assets/css/style.css">
+</head>
+<body data-page="shop">
+<a class="skip-link" href="#main">Hoppa till innehåll</a>
+<header class="site-header" id="site-header"></header>
+<main id="main">
+  <section class="shop-hero"><div class="container">
+    <span class="eyebrow" style="color:#fff;opacity:.8">Officiell klubbshop</span>
+    <h1>Bär färgerna</h1>
+    <p>Varje köp går tillbaka till akademin och A-laget. Fri frakt över 799 kr, eller hämta gratis på kansliet.</p>
+  </div></section>
+
+  <section class="section--tight"><div class="container">
+    <div class="promo" id="promo-bar"><div><b>10 % på hela ordern</b><br><span style="font-size:.9rem;opacity:.9">Ange koden i kassan, eller klicka så lägger vi till den.</span></div><div style="display:flex;gap:10px;align-items:center"><code id="promo-code">IFK10</code><button class="btn btn--light btn--sm" type="button" id="promo-apply">Använd koden</button></div></div>
+    <div class="filters" id="shop-filters" role="group" aria-label="Kategori"></div>
+    <div class="products" id="products"></div>
+    <div class="trust">
+      <div><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 7h13v10H3zM16 10h4l1 3v4h-5z"/><circle cx="7" cy="18" r="1.5"/><circle cx="18" cy="18" r="1.5"/></svg>Fri frakt över 799 kr</div>
+      <div><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 3l8 4v5c0 5-3.5 8-8 9-4.5-1-8-4-8-9V7z"/></svg>Betala med Swish eller faktura</div>
+      <div><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 12a9 9 0 1 0 3-6.7M3 4v5h5"/></svg>14 dagars öppet köp</div>
+      <div><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 21s-7-4.5-7-11a7 7 0 0 1 14 0c0 6.5-7 11-7 11z"/><circle cx="12" cy="10" r="2.5"/></svg>Hämta gratis på kansliet</div>
+    </div>
+  </div></section>
+
+  <section class="section" id="kassa"><div class="container">
+    <div class="section-head"><div><span class="eyebrow">Kassa</span><h2>Slutför din beställning</h2></div></div>
+    <div class="checkout">
+      <div>
+        <div id="checkout-done" hidden></div>
+        <form id="checkout-form" class="card" novalidate>
+          <h3>Dina uppgifter</h3>
+          <div class="field field--row"><div><label for="o-name">Namn</label><input id="o-name" name="name" required autocomplete="name"></div><div><label for="o-email">E-post</label><input id="o-email" name="email" type="email" required autocomplete="email"></div></div>
+          <div class="field"><label for="o-phone">Telefon</label><input id="o-phone" name="phone" type="tel" required autocomplete="tel"></div>
+          <h3 style="margin-top:20px">Leverans</h3>
+          <div class="radio-cards" style="margin-bottom:14px">
+            <label><input type="radio" name="delivery" value="pickup" checked><span>Hämta på kansliet<small>Gratis · Södermalms IP, vardagar 09–15</small></span></label>
+            <label><input type="radio" name="delivery" value="post"><span>Skicka med post<small>59 kr · fri frakt över 799 kr</small></span></label>
+          </div>
+          <div id="address-fields" hidden>
+            <div class="field"><label for="o-address">Gatuadress</label><input id="o-address" name="address" autocomplete="street-address"></div>
+            <div class="field field--row"><div><label for="o-zip">Postnummer</label><input id="o-zip" name="zip" autocomplete="postal-code"></div><div><label for="o-city">Ort</label><input id="o-city" name="city" autocomplete="address-level2"></div></div>
+          </div>
+          <h3 style="margin-top:20px">Betalning</h3>
+          <div class="radio-cards" style="margin-bottom:14px">
+            <label><input type="radio" name="payment" value="swish" checked><span>Swish<small>Du får nummer och ordernummer efter beställningen</small></span></label>
+            <label><input type="radio" name="payment" value="invoice"><span>Faktura via e-post<small>10 dagars betalningsvillkor</small></span></label>
+          </div>
+          <div class="field"><label for="o-note">Meddelande (valfritt)</label><textarea id="o-note" name="note" rows="2" placeholder="Tryck på tröjan, önskad hämtdag …"></textarea></div>
+          <button class="btn btn--primary btn--block" type="submit" id="place-order">Slutför beställning</button>
+          <p style="font-size:.8rem;color:var(--muted);margin:10px 0 0;text-align:center">Ingen betalning dras nu. Du får en orderbekräftelse med betalinstruktioner.</p>
+        </form>
+      </div>
+      <div id="order-summary"></div>
+    </div>
+  </div></section>
+</main>
+<footer class="site-footer" id="site-footer"></footer>
+<script src="assets/js/data.js"></script>
+<script src="assets/js/main.js"></script>
+<script src="assets/js/shop.js"></script>
+<script>
+document.addEventListener("ifk:ready", () => {
+  const { store, toast } = window.IFKUtil;
+  document.getElementById("promo-code").textContent = IFK.promo.code;
+  document.getElementById("promo-apply").addEventListener("click", () => {
+    store.set("ifk_discount", IFK.promo.code); toast(`${IFK.promo.percent} % rabatt läggs på i kassan`);
+    document.querySelectorAll("#code-input, #drawer-code").forEach(i => i.value = IFK.promo.code);
+    document.getElementById("code-apply")?.click();
+  });
+  const addr = document.getElementById("address-fields");
+  document.querySelectorAll("input[name=delivery]").forEach(r => r.addEventListener("change", e => {
+    const post = e.target.value === "post"; addr.hidden = !post;
+    ["o-address","o-zip","o-city"].forEach(id => document.getElementById(id).required = post);
+  }));
+  if (location.hash === "#varukorg") window.IFKShop.open();
+});
+</script>
+</body>
+</html>

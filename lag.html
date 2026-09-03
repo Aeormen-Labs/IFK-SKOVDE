@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="sv">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Våra lag – IFK Skövde FK</title>
+<meta name="description" content="Alla lag i IFK Skövde FK: Herr A, utvecklingslag, ungdomslag, knattefotboll och samarbetet med Skövde KIK.">
+<meta name="theme-color" content="#0A3A8C">
+<link rel="icon" href="assets/img/logo.svg" type="image/svg+xml">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@600;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="assets/css/style.css">
+</head>
+<body data-page="lag">
+<a class="skip-link" href="#main">Hoppa till innehåll</a>
+<header class="site-header" id="site-header"></header>
+<main id="main">
+  <section class="page-hero"><div class="container">
+    <div class="crumbs"><a href="index.html">Hem</a> / Våra lag</div>
+    <h1>Våra lag</h1>
+    <p>En röd tråd från knattefotboll till A-lag. Varje lag har en egen sida på Svenskalag med kallelser, träningstider och kontakt till ledarna.</p>
+  </div></section>
+  <section class="section"><div class="container">
+    <div class="filters" id="team-filters" role="group" aria-label="Filtrera lag">
+      <button class="chip" type="button" data-c="all" aria-pressed="true">Alla</button>
+      <button class="chip" type="button" data-c="senior">Senior</button>
+      <button class="chip" type="button" data-c="ungdom">Ungdom</button>
+      <button class="chip" type="button" data-c="knatte">Knatte</button>
+      <button class="chip" type="button" data-c="dam">Dam &amp; flick</button>
+    </div>
+    <div class="grid grid--3" id="teams"></div>
+  </div></section>
+  <section class="band band--dark"><div class="container">
+    <div><h2>Vill du börja spela?</h2><p>Alla barn födda 2018–2021 är välkomna till knattefotbollen på Södermalms IP. Ingen erfarenhet krävs, bara ett par skor och glädje.</p></div>
+    <a class="btn btn--light" href="kontakt.html#borja">Anmäl intresse</a>
+  </div></section>
+</main>
+<footer class="site-footer" id="site-footer"></footer>
+<script src="assets/js/data.js"></script>
+<script src="assets/js/main.js"></script>
+<script src="assets/js/shop.js"></script>
+<script>
+document.addEventListener("ifk:ready", () => {
+  const { ph, esc } = window.IFKUtil;
+  const el = document.getElementById("teams");
+  const render = (c) => {
+    el.innerHTML = IFK.teams.filter(t => c === "all" || t.category === c).map(t => `
+      <article class="team">${ph("Bild: " + t.name, "", t.img)}
+        <div class="team__body"><h3>${esc(t.name)}</h3>
+          <span class="team__meta">${esc(t.level)}${t.coach ? ` · Tränare: ${esc(t.coach)}` : ""}</span>
+          ${t.note ? `<p style="font-size:.9rem;color:var(--muted);margin:4px 0 8px">${esc(t.note)}</p>` : ""}
+          <a class="btn btn--ghost btn--sm" href="${esc(t.link)}" target="_blank" rel="noopener">Lagsida</a></div>
+      </article>`).join("");
+  };
+  render("all");
+  document.getElementById("team-filters").addEventListener("click", e => {
+    const b = e.target.closest("[data-c]"); if (!b) return;
+    document.querySelectorAll("#team-filters [data-c]").forEach(x => x.setAttribute("aria-pressed", String(x === b)));
+    render(b.dataset.c);
+  });
+});
+</script>
+</body>
+</html>
