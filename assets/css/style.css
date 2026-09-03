@@ -345,7 +345,7 @@ label{font-size:.85rem;font-weight:600;display:block;margin-bottom:5px}
 .toast.is-on{opacity:1;transform:translateX(-50%)}
 
 /* Sponsors – rullande band, höger till vänster */
-.partners{background:#fff;border-top:1px solid var(--line);border-bottom:1px solid var(--line);padding:36px 0 32px;overflow:hidden}
+.partners{background:#fff;border-top:1px solid var(--line);border-bottom:1px solid var(--line);padding:32px 0 28px;margin-top:40px;overflow:hidden}
 .partners .container{display:flex;justify-content:space-between;align-items:end;gap:16px;flex-wrap:wrap;margin-bottom:22px}
 .marquee{position:relative;overflow:hidden;-webkit-mask-image:linear-gradient(90deg,transparent,#000 8%,#000 92%,transparent);mask-image:linear-gradient(90deg,transparent,#000 8%,#000 92%,transparent)}
 .marquee__track{display:flex;gap:18px;width:max-content;animation:marquee var(--marquee-dur,48s) linear infinite;will-change:transform}
@@ -371,7 +371,11 @@ a.sponsor:hover,a.sponsor:focus-visible{border-color:var(--blue);transform:trans
 .footer-grid{display:grid;grid-template-columns:1.4fr 1fr 1fr 1fr;gap:28px}
 .site-footer h4{color:#fff;font-size:1.05rem;margin-bottom:10px}
 .site-footer ul{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:6px;font-size:.92rem}
-.footer-bottom{border-top:1px solid rgba(255,255,255,.12);margin-top:32px;padding-top:18px;font-size:.8rem;display:flex;justify-content:space-between;flex-wrap:wrap;gap:8px;color:rgba(255,255,255,.55)}
+.footer-partners{border-top:1px solid rgba(255,255,255,.12);margin-top:32px;padding-top:18px;display:flex;flex-wrap:wrap;gap:6px 18px;font-size:.82rem;align-items:center}
+.footer-partners span{font-family:var(--font-head);text-transform:uppercase;letter-spacing:.1em;font-weight:600;color:rgba(255,255,255,.55);margin-right:6px}
+.footer-partners a{color:rgba(255,255,255,.8)}
+.footer-partners a:hover{color:#fff}
+.footer-bottom{border-top:1px solid rgba(255,255,255,.12);margin-top:18px;padding-top:18px;font-size:.8rem;display:flex;justify-content:space-between;flex-wrap:wrap;gap:8px;color:rgba(255,255,255,.55)}
 @media (max-width:860px){.footer-grid{grid-template-columns:1fr 1fr}}
 @media (max-width:520px){.footer-grid{grid-template-columns:1fr}}
 

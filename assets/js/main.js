@@ -128,6 +128,7 @@
             <li><a href="${esc(c.social.svenskalag)}" target="_blank" rel="noopener">Medlemssidor (Svenskalag)</a></li>
           </ul></div>
         </div>
+        <div class="footer-partners"><span>Partners</span>${D.sponsors.map((s) => `<a href="${esc(s.url)}" target="_blank" rel="noopener sponsored">${esc(s.name.replace(/ – .*$/, ""))}</a>`).join("")}</div>
         <div class="footer-bottom">
           <span>© ${new Date().getFullYear()} ${esc(c.name)}</span>
           <span>Blå · Svart · Vit</span>
