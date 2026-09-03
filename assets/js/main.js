@@ -217,7 +217,7 @@
     return `<div class="fixture ${isNext ? "fixture--next" : ""}" data-status="${played ? "played" : "upcoming"}" data-venue="${home ? "home" : "away"}">
       <div class="fixture__date">${fmtDay(f.d)}<small>${SV_DAYS[f.d.getDay()]} ${f.d.getFullYear()}</small></div>
       <div><div class="fixture__teams">${teams}${isNext ? '<span class="tag">Nästa</span>' : ""}</div>
-        <div class="fixture__meta">${esc(f.competition)} · ${home ? esc(D.club.ground) : "Bortaplan"}${opts.actions === false ? "" : ` · <span class="fixture__acts">${played ? "" : `<a href="${icsFor(f)}" download="ifk-skovde-${f.date}.ics">Kalender</a> · `}<button type="button" class="linklike" data-share="${f.date}">Dela</button></span>`}</div></div>
+        <div class="fixture__meta">${esc(f.competition)} · ${home ? esc(D.club.ground) : "Bortaplan"}${opts.actions === false ? "" : `<span class="fixture__acts"> · ${played ? "" : `<a href="${icsFor(f)}" download="ifk-skovde-${f.date}.ics">Kalender</a> · `}<button type="button" class="linklike" data-share="${f.date}">Dela</button></span>`}</div></div>
       ${score}
     </div>`;
   }
