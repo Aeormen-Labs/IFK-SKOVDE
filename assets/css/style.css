@@ -344,10 +344,19 @@ label{font-size:.85rem;font-weight:600;display:block;margin-bottom:5px}
 .toast{position:fixed;left:50%;bottom:24px;transform:translateX(-50%) translateY(20px);background:var(--black);color:#fff;padding:12px 18px;border-radius:999px;font-size:.9rem;z-index:120;opacity:0;transition:.25s;pointer-events:none;box-shadow:var(--shadow)}
 .toast.is-on{opacity:1;transform:translateX(-50%)}
 
-/* Sponsors */
-.sponsors{display:grid;grid-template-columns:repeat(6,1fr);gap:12px}
-.sponsor{background:#fff;border:1px solid var(--line);border-radius:var(--radius-sm);aspect-ratio:3/1.4;display:flex;align-items:center;justify-content:center;color:var(--muted);font-size:.8rem;font-weight:600;letter-spacing:.06em;text-transform:uppercase}
-@media (max-width:900px){.sponsors{grid-template-columns:repeat(3,1fr)}}
+/* Sponsors – rullande band, höger till vänster */
+.partners{background:#fff;border-top:1px solid var(--line);border-bottom:1px solid var(--line);padding:36px 0 32px;overflow:hidden}
+.partners .container{display:flex;justify-content:space-between;align-items:end;gap:16px;flex-wrap:wrap;margin-bottom:22px}
+.marquee{position:relative;overflow:hidden;-webkit-mask-image:linear-gradient(90deg,transparent,#000 8%,#000 92%,transparent);mask-image:linear-gradient(90deg,transparent,#000 8%,#000 92%,transparent)}
+.marquee__track{display:flex;gap:18px;width:max-content;animation:marquee var(--marquee-dur,48s) linear infinite;will-change:transform}
+.marquee:hover .marquee__track,.marquee:focus-within .marquee__track{animation-play-state:paused}
+@keyframes marquee{from{transform:translateX(0)}to{transform:translateX(-50%)}}
+.sponsor{flex:none;width:220px;height:110px;background:#fff;border:1px solid var(--line);border-radius:var(--radius-sm);display:flex;align-items:center;justify-content:center;padding:18px 22px;color:var(--ink);text-decoration:none!important;transition:.18s;box-shadow:var(--shadow-sm)}
+a.sponsor:hover,a.sponsor:focus-visible{border-color:var(--blue);transform:translateY(-2px);box-shadow:var(--shadow);outline:none}
+.sponsor img{max-width:100%;max-height:100%;width:auto;height:auto;object-fit:contain}
+.sponsor__name{font-family:var(--font-head);font-weight:700;text-transform:uppercase;font-size:1.15rem;line-height:1.05;text-align:center;color:var(--muted);letter-spacing:.02em}
+@media (max-width:600px){.sponsor{width:170px;height:90px;padding:14px 16px}.marquee__track{gap:12px}}
+@media (prefers-reduced-motion:reduce){.marquee{mask-image:none;-webkit-mask-image:none}.marquee__track{animation:none;flex-wrap:wrap;width:auto;justify-content:center}.marquee__track .sponsor--dup{display:none}}
 
 /* CTA band */
 .band{background:var(--blue);color:#fff;padding:48px 0}

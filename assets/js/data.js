@@ -127,8 +127,25 @@ window.IFK = {
     { date: "2026-01-10", title: "Tobias Sandberg ny klubbchef", text: "Tobias Sandberg tillträdde i januari som klubbchef för IFK Skövde Fotboll.", img: "news-klubbchef.jpg" }
   ],
 
+  /* Partners. Logotyp läggs i assets/img/sponsors/ med filnamnet i `img`.
+     Saknas filen visas företagsnamnet som text. url: företagets hemsida. */
   sponsors: [
-    "Huvudpartner", "Guldpartner", "Guldpartner", "Silverpartner", "Silverpartner", "Silverpartner"
+    { name: "Swedbank",                    url: "https://www.swedbank.se",                     img: "swedbank.png" },
+    { name: "Furhoffs",                    url: "https://www.furhoffs.se",                     img: "furhoffs.png" },
+    { name: "Länsförsäkringar Skaraborg",  url: "https://www.lansforsakringar.se/skaraborg/",  img: "lansforsakringar-skaraborg.png" },
+    { name: "SISAB Svets & Verktygsgrossisten", url: "https://www.sisabsweden.se",             img: "sisab.png" },
+    { name: "Hellbergs Buss",              url: "https://www.hellbergsbuss.se",                img: "hellbergs-buss.png" },
+    { name: "Lindströms Bil",              url: "https://www.lindstromsbil.se",                img: "lindstroms-bil.png" },
+    { name: "Skeppsviken Bygg & Fastighet", url: "https://www.skeppsviken.se",                 img: "skeppsviken.png" },
+    { name: "HSB",                         url: "https://www.hsb.se",                          img: "hsb.png" },
+    { name: "JumpYard Skövde",             url: "https://jumpyard.se/skovde/",                 img: "jumpyard.png" },
+    { name: "Glaskedjan Skövde",           url: "https://skovde.glaskedjan.se",                img: "glaskedjan-skovde.png" },
+    { name: "Daloc",                       url: "https://www.daloc.se",                        img: "daloc.png" },
+    { name: "Spar",                        url: "",                                            img: "spar.png" },   // TODO: hemsida saknas, fyll i
+    { name: "Renta Skövde",                url: "https://renta.se/maskinuthyrning-skovde/",    img: "renta.png" },
+    { name: "Henrik Berggren Produktion",  url: "https://hbp.se",                              img: "henrik-berggren-produktion.png" },
+    { name: "Volvo",                       url: "https://www.volvocars.com/se/",               img: "volvo.png" },
+    { name: "Intersport – till webshopen", url: "https://www.intersport.se",                   img: "intersport.png" }  // TODO: byt till klubbens teamshop-länk
   ],
 
   /* Produkter. sizes: [] om storlek inte behövs. badge: valfri etikett. */

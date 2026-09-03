@@ -13,6 +13,7 @@ Saknas en fil visas en blå platta med bildtext, så sajten fungerar även utan 
 | `historia-1.jpg` | Historia, sidokolumn | 1200×1500 (stående) |
 | `news-*.jpg` | Nyhetskort på startsidan (filnamn anges per nyhet i `data.js`) | 1600×900 |
 | `team-*.jpg` | Lagkort (filnamn anges per lag i `data.js`) | 1600×900 |
+| `sponsors/*.png` | Partnerbandet på startsidan (filnamn per partner i `data.js`) | PNG/SVG med transparent bakgrund, ca 600×300 |
 | `prod-*.jpg` | Produktbilder i shoppen (filnamn anges per produkt i `data.js`) | 1200×1200 (kvadrat) |
 
 Tips
