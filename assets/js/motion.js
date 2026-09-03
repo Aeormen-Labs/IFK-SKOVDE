@@ -21,7 +21,7 @@
         if (!e.isIntersecting) return; io2.unobserve(e.target);
         const el = e.target, raw = el.dataset.count ?? el.textContent;
         const m = String(raw).match(/^([^\d]*)([\d\s]+)(.*)$/); if (!m) return;
-        const end = parseInt(m[2].replace(/\s/g, ""), 10); if (isNaN(end)) return;
+        const end = parseInt(m[2].replace(/\s/g, ""), 10); if (isNaN(end) || (end >= 1800 && end <= 2100 && el.dataset.count === undefined)) return; // årtal räknas inte upp
         const t0 = performance.now(), dur = 1100;
         const step = (t) => { const k = Math.min(1, (t - t0) / dur), v = Math.round(end * (1 - Math.pow(1 - k, 3))); el.textContent = m[1] + v.toLocaleString("sv-SE") + m[3]; if (k < 1) requestAnimationFrame(step); };
         requestAnimationFrame(step);

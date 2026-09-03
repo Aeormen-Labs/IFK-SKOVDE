@@ -556,3 +556,15 @@ tr.is-ifk.pulse td{animation:pulse 1.6s ease 1}
 .fx-round.done{border-color:var(--ok);background:#E5F5EC}
 tr.is-podium td{background:#FFF8E1}
 tr.is-ifk.is-podium td{background:var(--blue-soft)}
+
+/* Kompakta matchrader (startsidan) */
+.fixture-list--compact .fixture{grid-template-columns:64px 1fr auto;gap:10px;padding:12px 14px}
+.fixture-list--compact .fixture__date{font-size:1rem}
+.fixture-list--compact .fixture__date small{font-size:.7rem}
+.fixture-list--compact .fixture__teams{font-size:.92rem}
+.fixture-list--compact .fixture__meta{font-size:.75rem}
+.fixture-list--compact .fixture__acts{display:none}
+.fixture-list--compact .fixture__score{font-size:1.2rem;min-width:52px;padding:4px 8px}
+.fixture-list--compact .fixture__score--upcoming{font-size:.85rem}
+@media (max-width:960px){.grid--3[style*="grid-template-columns"]{grid-template-columns:1fr 1fr!important}}
+@media (max-width:600px){.grid--3[style*="grid-template-columns"]{grid-template-columns:1fr!important}}
